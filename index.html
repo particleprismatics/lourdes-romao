@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lourdes Romão — Artist &amp; Photographer</title>
+<meta name="description" content="Lourdes Romão — visual artist, graphic designer, photographer, sculptor and glass artist. Paintings, sculpture and fused glass work.">
+<meta property="og:title" content="Lourdes Romão">
+<meta property="og:description" content="Visual artist, graphic designer, photographer, sculptor and glass artist.">
+<meta property="og:image" content="assets/lourdes.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#top">Lourdes Romão</a>
+  <div class="nav-right">
+    <a class="navlink" href="#work">Work</a>
+    <a class="navlink" href="#about">About</a>
+    <!-- Particle Prismatics — the studio that hosts this site -->
+    <a class="pp-link" href="https://particleprismatics.com" target="_blank" rel="noopener noreferrer"
+       title="Particle Prismatics" aria-label="Particle Prismatics">
+      <img src="assets/particleprismatics-mark.svg" alt="Particle Prismatics">
+    </a>
+  </div>
+</nav>
+
+<!-- ── hero ──────────────────────────────────────────────────────────────── -->
+<header class="hero" id="top">
+  <img class="hero-img" src="assets/lourdes.jpg" alt="Lourdes Romão">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Photographer · Artist</p>
+    <h1 class="hero-name">Lourdes<br>Romão</h1>
+    <p class="hero-sub">Visual artist, graphic designer, photographer, sculptor and glass artist.</p>
+    <a class="scroll-cue" href="#work"><span>See the work</span><span class="chev"></span></a>
+  </div>
+</header>
+
+<!-- ── work ──────────────────────────────────────────────────────────────── -->
+<section class="section" id="work">
+  <div class="inner">
+    <p class="eyebrow">The Work</p>
+    <h2 class="section-title">Art</h2>
+    <div class="rule"></div>
+    <p class="section-desc">Paintings, sculpture and fused glass — three decades of work across materials.</p>
+    <div id="gallery" style="margin-top:52px"></div>
+  </div>
+</section>
+
+<!-- ── about ─────────────────────────────────────────────────────────────── -->
+<section class="section alt" id="about">
+  <div class="inner" style="max-width:820px">
+    <p class="eyebrow">About</p>
+    <h2 class="section-title">Lourdes Romão</h2>
+    <div class="rule"></div>
+    <p style="color:rgba(255,255,255,.72); margin-bottom:16px">
+      Lourdes Romão is a visual artist and designer working across painting, sculpture,
+      fused glass, photography and graphic design. Her work moves fluidly between
+      materials — oil on canvas, clay, and layered glass — with a recurring interest in
+      colour, nature and the patterns of everyday life.
+    </p>
+    <p style="color:rgba(255,255,255,.72); margin-bottom:16px">
+      Alongside her studio practice she has contributed to numerous fundraising
+      organizations and non-profits, and runs her independent design studio,
+      <strong>Azure Design</strong>.
+    </p>
+    <p style="color:var(--muted); font-size:13.5px">
+      MFA, Massachusetts College of Art · BFA, FAAP, São Paulo, Brasil
+    </p>
+  </div>
+</section>
+
+<!-- ── lightbox ──────────────────────────────────────────────────────────── -->
+<div class="lb" id="lb" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lbClose" aria-label="Close">×</button>
+  <button class="lb-nav prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lb-nav next" id="lbNext" aria-label="Next">›</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-meta">
+    <div class="t" id="lbTitle"></div>
+    <div class="m" id="lbMeta"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="inner">
+    <div class="brand">Lourdes Romão</div>
+    <div class="meta">
+      © <span id="yr"></span> Lourdes Romão · Site by
+      <a href="https://particleprismatics.com" target="_blank" rel="noopener noreferrer">Particle Prismatics</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/art.js"></script>
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // ── build gallery from window.ART ──────────────────────────────────────
+  const flat = [];
+  const gallery = document.getElementById('gallery');
+  (window.ART || []).forEach(cat => {
+    const sec = document.createElement('div');
+    sec.className = 'cat';
+    const head = document.createElement('div');
+    head.className = 'cat-head';
+    head.innerHTML = `<h3>${cat.label}</h3><p>${cat.desc || ''}</p>`;
+    sec.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    cat.items.forEach(it => {
+      const idx = flat.push(it) - 1;
+      const tile = document.createElement('button');
+      tile.className = 'tile';
+      tile.type = 'button';
+      tile.innerHTML =
+        `<img src="${it.src}" alt="${it.title}" loading="lazy">` +
+        `<div class="tile-cap"><div class="t">${it.title}</div>` +
+        `<div class="m">${[it.year, it.medium].filter(Boolean).join(' · ')}</div></div>`;
+      tile.addEventListener('click', () => open(idx));
+      grid.appendChild(tile);
+    });
+    sec.appendChild(grid);
+    gallery.appendChild(sec);
+  });
+
+  // ── lightbox ───────────────────────────────────────────────────────────
+  const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle'), lbMeta = document.getElementById('lbMeta');
+  let cur = 0;
+  function open(i){
+    cur = (i + flat.length) % flat.length;
+    const it = flat[cur];
+    lbImg.src = it.src; lbImg.alt = it.title;
+    lbTitle.textContent = it.title;
+    lbMeta.textContent = [it.year, it.medium].filter(Boolean).join(' · ');
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){ lb.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); open(cur - 1); });
+  document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); open(cur + 1); });
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  window.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  open(cur - 1);
+    if (e.key === 'ArrowRight') open(cur + 1);
+  });
+</script>
+</body>
+</html>
